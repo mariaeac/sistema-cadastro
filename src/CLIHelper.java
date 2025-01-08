@@ -9,13 +9,12 @@ public class CLIHelper {
         this.fileManager = fileManager;
     }
 
-    public void printForm() {
+    public List<String> printForm() {
         try {
            List<String> form = fileManager.loadForm();
-           form.forEach(System.out::println);
+           return form;
         } catch (RuntimeException e) {
-            System.out.println("Erro ao carregar o arquivo:" + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
-
 }

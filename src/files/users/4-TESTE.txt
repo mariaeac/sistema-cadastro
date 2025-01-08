@@ -1,0 +1,4 @@
+teste
+teste@gmail.com
+20
+20.0
