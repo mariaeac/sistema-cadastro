@@ -54,4 +54,11 @@ public class CLIHelper {
             System.out.println(user);
         }
     }
+
+    public void addNewQuestion(Scanner scanner) {
+        System.out.println("Insira a nova pergunta: ");
+        String question = scanner.nextLine();
+        FileManager.updateForm(question);
+
+    }
 }

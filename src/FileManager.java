@@ -12,7 +12,7 @@ public class FileManager {
 
 
     // Carrega o formulário
-    public List<String> loadForm() {
+    public static List<String> loadForm() {
         List<String> formLines = new ArrayList<String>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(FORM_FILE_PATH))) {
@@ -76,6 +76,17 @@ public class FileManager {
             users.add(userName);
         }
         return users;
+    }
+
+    public static void updateForm(String newQuestion) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FORM_FILE_PATH, true))) {
+            List<String> form = loadForm();
+            int questionCounter = form.size() + 1;
+            bw.write(questionCounter + " -" + newQuestion + "\n");
+            System.out.println("Pergunta adicionada com sucesso!");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
