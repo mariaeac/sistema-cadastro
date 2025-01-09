@@ -8,6 +8,7 @@ public class FileManager {
 
     private final static String FORM_FILE_PATH = "src/files/formulario.txt";
     private final static String COUNTER_FILE_PATH = "src/files/counter.txt";
+    private final static String USERS_DIR = "src/files/users";
 
 
     // Carrega o formulário
@@ -64,6 +65,17 @@ public class FileManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static List<String> loadUsers() {
+        List<String> users = new ArrayList<>();
+        File usersDir = new File(USERS_DIR);
+        String[] archives = usersDir.list();
+        for (String archive : archives) {
+            String userName = archive.substring(0, archive.lastIndexOf("."));
+            users.add(userName);
+        }
+        return users;
     }
 
 

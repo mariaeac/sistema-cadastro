@@ -15,6 +15,7 @@ public class Main {
 
         switch (choice) {
             case 1 -> cliHelper.registerUser(sc);
+            case 2 -> cliHelper.printAllUsers();
         }
 
 

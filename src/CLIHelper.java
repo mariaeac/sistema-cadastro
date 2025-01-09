@@ -47,4 +47,11 @@ public class CLIHelper {
             throw new RuntimeException(e);
         }
     }
+
+    public static void printAllUsers() {
+        List<String> allUsers = FileManager.loadUsers();
+        for (String user : allUsers) {
+            System.out.println(user);
+        }
+    }
 }
