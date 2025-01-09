@@ -1,5 +1,6 @@
 import entities.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -59,6 +60,40 @@ public class CLIHelper {
         System.out.println("Insira a nova pergunta: ");
         String question = scanner.nextLine();
         FileManager.updateForm(question);
+
+    }
+
+    public void deleteQuestion(Scanner scanner) {
+        List<String> form = FileManager.loadForm();
+        for (String questions : form) {
+            System.out.println(questions);
+        }
+        System.out.println("Insira o número da pergunta que você deseja deletar: :");
+        int questionNumber = scanner.nextInt();
+        if (questionNumber <= 4) {
+            System.out.println("As primeiras 4 perguntas não podem ser deletadas!");
+            return;
+        }
+        else {
+            form.remove(questionNumber - 1 ) ;
+            FileManager.deleteFormAnswer(form);
+
+        }
+    }
+
+    public void searchUser(Scanner scanner) {
+        File userDir = new File(FileManager.USERS_DIR);
+        String[] archives = userDir.list();
+        if (archives == null || archives.length == 0) {
+            System.out.println("Nenhum usuário cadastrado!");
+            return;
+        }
+        System.out.println("Insira o termo de pesquisa (Nome, idade ou email):");
+        String searchTerm = scanner.nextLine();
+
+        FileManager.searchUser(archives, searchTerm);
+
+
 
     }
 }

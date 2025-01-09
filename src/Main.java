@@ -17,6 +17,9 @@ public class Main {
             case 1 -> cliHelper.registerUser(sc);
             case 2 -> cliHelper.printAllUsers();
             case 3 -> cliHelper.addNewQuestion(sc);
+            case 4 -> cliHelper.deleteQuestion(sc);
+            case 5 -> cliHelper.searchUser(sc);
+            
         }
 
 
