@@ -1,3 +1,5 @@
+import entities.User;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,20 +27,15 @@ public class FileManager {
 
     // Salva um novo usuário
     public void saveUserArchive(User user) {
-        String archiveName = generateArchiveName(user.getName());
+        String archiveName = generateArchiveName((String) user.getAnswer("1 - Qual seu nome completo?"));
         String archivePath = "src/files/users/" + archiveName;
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivePath))) {
-            bw.write(user.getName());
-            bw.newLine();
-            bw.write(user.getEmail());
-            bw.newLine();
-            bw.write(String.valueOf(user.getAge()));
-            bw.newLine();
-            bw.write(String.valueOf(user.getHeight()));
-
+            for (var e : user.getAllAnswers().entrySet()) {
+                bw.write(e.getValue() + "\n");
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Erro ao salvar usuário: " + e.getMessage());
         }
 
         updateCounterNumber();

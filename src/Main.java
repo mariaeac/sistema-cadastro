@@ -9,17 +9,17 @@ public class Main {
         FileManager fm = new FileManager();
         CLIHelper cliHelper = new CLIHelper(fm);
 
-        List<String> form = new ArrayList<>();
-        form = cliHelper.printForm();
+        cliHelper.mainMenu();
+        int choice = sc.nextInt();
+        sc.nextLine();
 
-        for (String questions : form ) {
-            System.out.println(questions);
-            answers.add(sc.nextLine());
+        switch (choice) {
+            case 1 -> cliHelper.registerUser(sc);
         }
 
-        User newUser = new User(answers.get(0), answers.get(1), Integer.parseInt(answers.get(2)), Double.parseDouble(answers.get(3)));
-        fm.saveUserArchive(newUser);
-        System.out.println(newUser);
+
+
+
 
 
 
