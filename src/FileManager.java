@@ -31,7 +31,7 @@ public class FileManager {
             File filesDir = new File("files/");
             if (!filesDir.exists()) {
                 filesDir.mkdirs();
-                System.out.println("Diretório 'files' criado.");
+                System.out.println("Diretório 'files' criado");
             }
 
 
