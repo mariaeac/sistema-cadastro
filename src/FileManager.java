@@ -5,9 +5,50 @@ import java.util.List;
 
 public class FileManager {
 
-    private final static String FORM_FILE_PATH = "src/files/formulario.txt";
-    private final static String COUNTER_FILE_PATH = "src/files/counter.txt";
-    protected final static String USERS_DIR = "src/files/users/";
+    private final static String FORM_FILE_PATH = "files/formulario.txt";
+    private final static String COUNTER_FILE_PATH = "files/counter.txt";
+    protected final static String USERS_DIR = "files/users/";
+
+    public static void ensureDirectoriesAndFilesExist() {
+        try {
+
+            File usersDir = new File(USERS_DIR);
+            if (!usersDir.exists()) {
+                usersDir.mkdirs();
+                System.out.println("Diretório 'users' criado.");
+            }
+
+
+            File counterFile = new File(COUNTER_FILE_PATH);
+            if (!counterFile.exists()) {
+                try (FileWriter writer = new FileWriter(counterFile)) {
+                    writer.write("1");
+                    System.out.println("Arquivo 'counter.txt' criado.");
+                }
+            }
+
+
+            File filesDir = new File("files/");
+            if (!filesDir.exists()) {
+                filesDir.mkdirs();
+                System.out.println("Diretório 'files' criado.");
+            }
+
+
+            File formularioFile = new File(FORM_FILE_PATH);
+            if (!formularioFile.exists()) {
+                try (FileWriter writer = new FileWriter(formularioFile)) {
+                    writer.write("1 - Qual seu nome completo?\n");
+                    writer.write("2 - Qual seu email de contato?\n");
+                    writer.write("3 - Qual sua idade?\n");
+                    writer.write("4 - Qual sua altura?\n");
+                    System.out.println("Arquivo 'formulario.txt' criado.");
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao criar arquivos/diretórios: " + e.getMessage());
+        }
+    }
 
 
     public static List<String> loadForm() {
@@ -28,7 +69,7 @@ public class FileManager {
     public void saveUserArchive(User user) {
         String userName = (String) user.getAnswer("1 - Qual seu nome completo?");
         String archiveName = generateArchiveName(userName);
-        String archivePath = "src/files/users/" + archiveName;
+        String archivePath = USERS_DIR + archiveName;
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivePath))) {
             for (var e : user.getAllAnswers().entrySet()) {

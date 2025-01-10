@@ -11,6 +11,7 @@ public class Main {
         FileManager fm = new FileManager();
         CLIHelper cliHelper = new CLIHelper(fm);
 
+        FileManager.ensureDirectoriesAndFilesExist();
 
         boolean cont = true;
         int choice;
