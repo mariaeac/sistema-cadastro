@@ -1,5 +1,3 @@
-import entities.User;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +24,12 @@ public class CLIHelper {
         User user = new User();
         user.setAnswer(String.valueOf(form), answers);
         UserRegistration ur = new UserRegistration();
-        ur.RegisterUser(form, answers);
+        if (ur.RegisterUser(form, answers)) {
+           for (String answer : answers) {
+               System.out.println(answer);
+           }
+        };
+
     }
 
     public void mainMenu() {
@@ -83,15 +86,25 @@ public class CLIHelper {
 
     public void searchUser(Scanner scanner) {
         File userDir = new File(FileManager.USERS_DIR);
-        String[] archives = userDir.list();
-        if (archives == null || archives.length == 0) {
-            System.out.println("Nenhum usuário cadastrado!");
+
+        if (!userDir.exists() || !userDir.isDirectory()) {
+            System.out.println("Nenhum usuário cadastrado no momento!");
             return;
         }
-        System.out.println("Insira o termo de pesquisa (Nome, idade ou email):");
+        System.out.println("Insira o termo de pesquisa (nome, email ou idade)");
         String searchTerm = scanner.nextLine();
 
-        FileManager.searchUser(archives, searchTerm);
+        File[] usersFiles = userDir.listFiles();
+        List<File> usersMatching = FileManager.searchUser(usersFiles, searchTerm);
+
+        if (usersMatching.isEmpty()) {
+            System.out.println("Nenhum usuário encontrado!");
+        } else {
+            for (File userFile : usersMatching) {
+                System.out.println(userFile.getName());
+               FileManager.getUsersDetails(userFile);
+            }
+        }
 
 
 

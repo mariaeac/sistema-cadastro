@@ -1,17 +1,15 @@
-import entities.User;
-
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FileManager {
 
     private final static String FORM_FILE_PATH = "src/files/formulario.txt";
     private final static String COUNTER_FILE_PATH = "src/files/counter.txt";
-    protected final static String USERS_DIR = "src/files/users";
+    protected final static String USERS_DIR = "src/files/users/";
 
 
-    // Carrega o formulário
     public static List<String> loadForm() {
         List<String> formLines = new ArrayList<String>();
 
@@ -20,15 +18,16 @@ public class FileManager {
             while ((line = br.readLine()) != null) {
                 formLines.add(line);
             }
-            return formLines;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Ocorreu um erro ao carregar o formulário: " + e.getMessage());
         }
+
+        return formLines;
     }
 
-    // Salva um novo usuário
     public void saveUserArchive(User user) {
-        String archiveName = generateArchiveName((String) user.getAnswer("1 - Qual seu nome completo?"));
+        String userName = (String) user.getAnswer("1 - Qual seu nome completo?");
+        String archiveName = generateArchiveName(userName);
         String archivePath = "src/files/users/" + archiveName;
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivePath))) {
@@ -38,7 +37,7 @@ public class FileManager {
         } catch (IOException e) {
             System.out.println("Erro ao salvar usuário: " + e.getMessage());
         }
-
+        System.out.println("Usuário " + userName + " salvo com sucesso!");
         updateCounterNumber();
     }
 
@@ -50,12 +49,15 @@ public class FileManager {
     }
 
     public static Integer getCounterNumber() {
+        String strNum = "";
         try (BufferedReader br = new BufferedReader(new FileReader(COUNTER_FILE_PATH)) ) {
-            String strNum = br.readLine();
-            return Integer.parseInt(strNum);
+            strNum = br.readLine();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+           System.out.println("Erro ao ler arquivo: " + e.getMessage());
         }
+
+        return Integer.parseInt(strNum);
+
     }
 
     public static void updateCounterNumber() {
@@ -63,7 +65,7 @@ public class FileManager {
         try (FileWriter fw = new FileWriter(COUNTER_FILE_PATH, false)) {
             fw.write(String.valueOf(counter + 1));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+           System.out.println("Erro ao atualizar o contador: " + e.getMessage());
         }
     }
 
@@ -82,10 +84,10 @@ public class FileManager {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FORM_FILE_PATH, true))) {
             List<String> form = loadForm();
             int questionCounter = form.size() + 1;
-            bw.write(questionCounter + " -" + newQuestion + "\n");
+            bw.write(questionCounter + " - " + newQuestion + "\n");
             System.out.println("Pergunta adicionada com sucesso!");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+           System.out.println("Erro ao atualizar o formulário: " + e.getMessage());
         }
     }
 
@@ -96,33 +98,62 @@ public class FileManager {
             }
             System.out.println("Pergunta deletada com sucesso!");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Erro ao deletar pergunta do formulário: " + e.getMessage());
         }
     }
 
-    public static void searchUser(String[] archives, String searchTerm) {
+   public static List<File> searchUser(File[] files, String searchTerm ) {
+       List<File> matchingFiles = new ArrayList<>();
 
-        boolean found = false;
+       if (files != null) {
+           for (File file : files) {
+               try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                   String line;
+                   while ((line = br.readLine()) != null) {
+                       if (line.toLowerCase().contains(searchTerm.toLowerCase())) {
+                           matchingFiles.add(file);
+                           break;
+                       }
+                   }
+               } catch (Exception e) {
+                   System.out.println("Erro ao ler arquivo: " + e.getMessage());
+               }
+           }
+           return matchingFiles;
+       }
+       return matchingFiles;
+   }
 
-        for (String archive : archives) {
-            try (BufferedReader br = new BufferedReader(new FileReader(USERS_DIR + "/" +  archive))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    if (line.toLowerCase().contains(searchTerm.toLowerCase())) {
-                        System.out.println("Termo encontrado no arquivo: " + archive);
-                        found = true;
-                        break;
-                    }
-                }
+   public static void getUsersDetails(File userFiles) {
 
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+        try (BufferedReader br = new BufferedReader(new FileReader(userFiles))) {
+          System.out.println("Detalhes do usuário: " + userFiles.getName());
+          String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
             }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao ler arquivo: " + e.getMessage());
         }
-        if (!found) {
-            System.out.println("Nenhum usuário encontrado com o termo informado");
-        }
-    }
+
+   }
+
+   public static List<String> loadAllEmails() {
+       List<String> emails = new ArrayList<>();
+       File usersDir = new File(USERS_DIR);
+       File[] archives = usersDir.listFiles();
+       for (File archive : archives) {
+           try (BufferedReader br = new BufferedReader(new FileReader(archive))){
+               br.readLine();
+               String userEmail = br.readLine();
+               emails.add(userEmail);
+           } catch (IOException e) {
+               System.out.println("Erro ao ler arquivo: " + e.getMessage());
+           }
+       }
+       return emails;
+   }
 
 
 
