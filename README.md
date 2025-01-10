@@ -41,11 +41,11 @@ git clone git@github.com:mariaeac/sistema-cadastro.git
 ### Compile o Código:
 Se estiver usando a linha de comando:
 ```bash
-javac src/*.java
+javac Main.java
 ```
 
 ### Execute o Programa:
 ```bash
-java src.Main
+java Main.java
 ```
 
